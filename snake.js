@@ -6,11 +6,9 @@ function Snake() {
     this.cellSize = 10;
     this.width = 15;
     this.height = 15;
-    this.snake = [{x: 7, y: 7}, {x: 6, y: 7}, {x: 5, y: 7}, {x: 4, y: 7}];
+    this.snake = [{x: 7, y: 7}, {x: 6, y: 7}, {x: 5, y: 7}];
     this.direction = 'right';
-    this.lastDirection = 'right';
-    this.food = [{x: 2, y: 2}];
-    this.points = 0;
+    this.food = [];
     this.over = false;
     // Create game canvas and context
     var canvas = document.createElement('canvas');
@@ -29,31 +27,31 @@ Snake.prototype.handleKeyDown = function (event) {
     switch (event.key) {
         case 'w':
         case 'ArrowUp':
-            this.direction = this.lastDirection == 'down' ? 'down' : 'up';
+            this.direction = 'up';
             break;
         case 'a':
         case 'ArrowLeft':
-            this.direction = this.lastDirection == 'right' ? 'right' : 'left';
+            this.direction = 'left';
             break;
         case 's':
         case 'ArrowDown':
-            this.direction = this.lastDirection == 'up' ? 'up' : 'down';
+            this.direction = 'down';
             break;
         case 'd':
         case 'ArrowRight':
-            this.direction = this.lastDirection == 'left' ? 'left' : 'right';
+            this.direction = 'right';
             break;
     }
-};
+}
 
 Snake.prototype.gameOver = function () {
     clearInterval(this.interval);
     window.removeEventListener('keydown', this.handleKeyDown);
     window.addEventListener('keydown', ()=> {
         new Snake();
-    }, {once: true});
+    }, {once: true})
     this.over = true;
-};
+}
 
 Snake.prototype.render = function () {
     if (this.over) {
@@ -65,7 +63,6 @@ Snake.prototype.render = function () {
         this.ctx.font = '16px sans-serif';
         this.ctx.fillText("Game Over", 10, 20);
         this.ctx.fillText("Points: ", 10, 40);
-        this.ctx.fillText(this.points, 70, 40);
         this.ctx.font = '10px sans-serif';
         this.ctx.fillText("Press any key for new game", 10, 60);
         return;
@@ -94,7 +91,7 @@ Snake.prototype.render = function () {
             this.cellSize
         );
     });
-};
+}
 
 /** @method update
  * Updates the snake, moving it forward
@@ -119,24 +116,8 @@ Snake.prototype.update = function () {
     // If we move off-board, game is over
     if (x < 0 || x > this.width || y < 0 || y > this.height)
         return this.gameOver();
-    //If we hit the tail, game is over
-    if (this.snake.findIndex((segment)=>segment.x == x && segment.y == y) != -1)
-        return this.gameOver();
-    //If we eat food the tail will grow
-    if (this.food.findIndex((segment)=>segment.x == x && segment.y == y) == -1)
-        this.snake.pop();
-    else {
-        this.points++;
-        this.food.pop();
-        var fx, fy;
-        do {
-            fx = Math.floor(Math.random() * 10);
-            fy = Math.floor(Math.random() * 10);
-        } while (this.snake.findIndex((segment)=>segment.x == fx && segment.y == fy) != -1);
-        this.food.push({x: fx, y: fy})
-    }
+    this.snake.pop();
     this.snake.unshift({x: x, y: y});
-    this.lastDirection = this.direction;
 };
 
 Snake.prototype.loop = function () {
