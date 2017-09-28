@@ -42,16 +42,16 @@ Snake.prototype.handleKeyDown = function (event) {
             this.direction = 'right';
             break;
     }
-}
+};
 
 Snake.prototype.gameOver = function () {
     clearInterval(this.interval);
     window.removeEventListener('keydown', this.handleKeyDown);
     window.addEventListener('keydown', ()=> {
         new Snake();
-    }, {once: true})
+    }, {once: true});
     this.over = true;
-}
+};
 
 Snake.prototype.render = function () {
     if (this.over) {
