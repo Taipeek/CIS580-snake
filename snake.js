@@ -20,7 +20,7 @@ function Snake() {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     window.addEventListener('keydown', this.handleKeyDown);
 
-    this.interval = setInterval(()=>this.loop(), 100);
+    this.interval = setInterval(() => this.loop(), 100);
 }
 
 Snake.prototype.handleKeyDown = function (event) {
@@ -47,7 +47,7 @@ Snake.prototype.handleKeyDown = function (event) {
 Snake.prototype.gameOver = function () {
     clearInterval(this.interval);
     window.removeEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('keydown', ()=> {
+    window.addEventListener('keydown', () => {
         new Snake();
     }, {once: true});
     this.over = true;
